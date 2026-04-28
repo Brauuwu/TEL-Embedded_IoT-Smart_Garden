@@ -31,9 +31,9 @@ A robust, 3-Node distributed Smart Garden system built with **ESP32**, **ESP8266
 
 ### 2. Node 1 - Sensors (ESP8266)
 *Edge node responsible for gathering distal data.*
-- **DHT11**: `D8`
+- **DHT11**: `D2`
 - **PIR Sensor**: `D4`
-- **NRF24L01**: `CE = D3`, `CSN = D0`
+- **NRF24L01**: `CE = D8`, `CSN = D0`
 
 ### 3. Node 2 - Actuators (ESP8266)
 *Edge node responsible for distal actions and local display.*

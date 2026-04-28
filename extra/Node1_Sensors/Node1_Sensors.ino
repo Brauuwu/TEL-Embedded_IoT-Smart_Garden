@@ -3,11 +3,11 @@
 #include <RF24.h>
 #include <DHT.h>
 
-#define DHTPIN D8
+#define DHTPIN D2
 #define DHTTYPE DHT11
 #define PIR_PIN D4
 
-#define NRF_CE D3
+#define NRF_CE D8
 #define NRF_CSN D0
 
 DHT dht(DHTPIN, DHTTYPE);
