@@ -16,6 +16,9 @@ PayloadNode1 node1Data = {0.0, 0.0, false};
 ControlMode currentMode = MODE_AUTO;
 bool fanState = false;
 bool ledState = false;
+bool heaterState = false;
+bool pumpState = false;
+bool mistState = false;
 
 // MQTT Callback to handle manual commands
 void mqttCallback(String topic, String payload) {
@@ -23,11 +26,13 @@ void mqttCallback(String topic, String payload) {
     if (payload == "auto") currentMode = MODE_AUTO;
     else if (payload == "manual") currentMode = MODE_MANUAL;
   }
-  else if (topic == "garden/cmd/fan" && currentMode == MODE_MANUAL) {
-    fanState = (payload == "on" || payload == "true" || payload == "1");
-  }
-  else if (topic == "garden/cmd/led" && currentMode == MODE_MANUAL) {
-    ledState = (payload == "on" || payload == "true" || payload == "1");
+  else if (currentMode == MODE_MANUAL) {
+    bool state = (payload == "on" || payload == "true" || payload == "1");
+    if (topic == "garden/cmd/fan") fanState = state;
+    else if (topic == "garden/cmd/led") ledState = state;
+    else if (topic == "garden/cmd/heater") heaterState = state;
+    else if (topic == "garden/cmd/pump") pumpState = state;
+    else if (topic == "garden/cmd/mist") mistState = state;
   }
 }
 
@@ -37,6 +42,13 @@ void setup() {
   pinMode(BTN, INPUT_PULLUP);
   pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(RELAY_PIN, LOW);
+  
+  pinMode(RGB_R, OUTPUT);
+  pinMode(RGB_G, OUTPUT);
+  pinMode(RGB_B, OUTPUT);
+  digitalWrite(RGB_R, LOW);
+  digitalWrite(RGB_G, LOW);
+  digitalWrite(RGB_B, LOW);
 
   displayInit();
   sensorsInit();
@@ -95,10 +107,19 @@ void loop() {
 
         // Fan (Relay) on ESP32: On if temp > 30°C
         fanState = (node1Data.temp > 30.0);
+        
+        // RGB Actuators Logic
+        heaterState = (node1Data.temp < 22.0); // Red: Heating
+        pumpState = (soil < 40.0);             // Green: Watering
+        mistState = (node1Data.hum < 50.0);    // Blue: Humidifier
       }
 
       // Apply Local Actuators
       digitalWrite(RELAY_PIN, fanState ? HIGH : LOW);
+      digitalWrite(RGB_R, heaterState ? HIGH : LOW);
+      digitalWrite(RGB_G, pumpState ? HIGH : LOW);
+      digitalWrite(RGB_B, mistState ? HIGH : LOW);
+      
       buzzerAlert(node1Data.temp, soil);
 
       // Write to Node 2 (Actuators) over NRF24 (every 1 second)
@@ -116,13 +137,13 @@ void loop() {
       // Update TFT Display
       if (millis() - lastDraw > 500) {
         lastDraw = millis();
-        drawDashboard(node1Data, light, soil, isWifiConnected(), getWifiRSSI(), isMqttConnected(), currentMode, fanState, ledState);
+        drawDashboard(node1Data, light, soil, isWifiConnected(), getWifiRSSI(), isMqttConnected(), currentMode, fanState, ledState, heaterState, pumpState, mistState);
       }
       
       // Publish Telemetry to MQTT
       if (millis() - lastPub > 5000) {
         lastPub = millis();
-        mqttPublishTelemetry(node1Data, light, soil, currentMode, fanState, ledState);
+        mqttPublishTelemetry(node1Data, light, soil, currentMode, fanState, ledState, heaterState, pumpState, mistState);
       }
 
       break;

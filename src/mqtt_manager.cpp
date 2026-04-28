@@ -41,6 +41,9 @@ void mqttTask() {
         mqttClient.subscribe("garden/cmd/mode");
         mqttClient.subscribe("garden/cmd/fan");
         mqttClient.subscribe("garden/cmd/led");
+        mqttClient.subscribe("garden/cmd/heater");
+        mqttClient.subscribe("garden/cmd/pump");
+        mqttClient.subscribe("garden/cmd/mist");
       }
     }
   } else {
@@ -52,7 +55,7 @@ bool isMqttConnected() {
   return mqttClient.connected();
 }
 
-void mqttPublishTelemetry(PayloadNode1 n1, float light, float soil, ControlMode mode, bool fan, bool led) {
+void mqttPublishTelemetry(PayloadNode1 n1, float light, float soil, ControlMode mode, bool fan, bool led, bool heater, bool pump, bool mist) {
   if (!isMqttConnected()) return;
   
   String mStr = (mode == MODE_AUTO) ? "auto" : "manual";
@@ -64,7 +67,10 @@ void mqttPublishTelemetry(PayloadNode1 n1, float light, float soil, ControlMode 
                    ",\"soil\":" + String(soil) + 
                    ",\"mode\":\"" + mStr + "\"" + 
                    ",\"fan\":" + String(fan ? "true" : "false") + 
-                   ",\"led\":" + String(led ? "true" : "false") + "}";
+                   ",\"led\":" + String(led ? "true" : "false") + 
+                   ",\"heater\":" + String(heater ? "true" : "false") + 
+                   ",\"pump\":" + String(pump ? "true" : "false") + 
+                   ",\"mist\":" + String(mist ? "true" : "false") + "}";
                    
   mqttClient.publish("garden/telemetry", payload.c_str());
 }

@@ -41,7 +41,7 @@ void drawBoot() {
   tft.print("Initializing...");
 }
 
-void drawDashboard(PayloadNode1 n1, float light, float soil, bool wifiOk, int rssi, bool mqttOk, ControlMode mode, bool fanOn, bool ledOn) {
+void drawDashboard(PayloadNode1 n1, float light, float soil, bool wifiOk, int rssi, bool mqttOk, ControlMode mode, bool fanOn, bool ledOn, bool heatOn, bool pumpOn, bool mistOn) {
   tft.fillScreen(ST77XX_BLACK);
 
   // --- 1. STATUS ---
@@ -94,18 +94,25 @@ void drawDashboard(PayloadNode1 n1, float light, float soil, bool wifiOk, int rs
 
   // --- 4. ACTUATORS ---
   tft.setTextColor(ST77XX_YELLOW);
-  tft.setCursor(2, 108);
+  tft.setCursor(2, 106);
   tft.print("[ACTUATORS]");
 
   tft.setTextColor(ST77XX_WHITE);
-  tft.setCursor(5, 120); tft.print("Fan:");
+  tft.setCursor(5, 118); tft.print("Fan:");
   if (fanOn) { tft.setTextColor(ST77XX_GREEN); tft.print("ON"); } 
   else { tft.setTextColor(ST77XX_RED); tft.print("OFF"); }
 
   tft.setTextColor(ST77XX_WHITE);
-  tft.setCursor(65, 120); tft.print("LED:");
+  tft.setCursor(65, 118); tft.print("LED:");
   if (ledOn) { tft.setTextColor(ST77XX_GREEN); tft.print("ON"); } 
   else { tft.setTextColor(ST77XX_RED); tft.print("OFF"); }
+  
+  // RGB Indicators
+  tft.setTextColor(ST77XX_WHITE);
+  tft.setCursor(5, 135); tft.print("RGB:");
+  if (heatOn) tft.fillCircle(40, 138, 4, ST77XX_RED); else tft.drawCircle(40, 138, 4, ST77XX_RED);
+  if (pumpOn) tft.fillCircle(55, 138, 4, ST77XX_GREEN); else tft.drawCircle(55, 138, 4, ST77XX_GREEN);
+  if (mistOn) tft.fillCircle(70, 138, 4, ST77XX_BLUE); else tft.drawCircle(70, 138, 4, ST77XX_BLUE);
 }
 
 void drawAP(IPAddress ip) {

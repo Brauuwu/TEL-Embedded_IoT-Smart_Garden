@@ -9,7 +9,8 @@ A robust, 3-Node distributed Smart Garden system built with **ESP32**, **ESP8266
 - **3-Node Distributed Architecture**: 
   - **Node 1 (Sensors)**: Gathers Temperature, Humidity, and PIR Motion data.
   - **Node 2 (Actuators)**: Displays data on OLED and controls an LED based on lighting conditions.
-  - **Center Node (Gateway)**: An ESP32 that orchestrates the logic, reads local analog sensors via MCP3008, controls a Fan Relay, sounds a Buzzer, and manages cloud communication.
+- **Center Node (Gateway)**: An ESP32 that orchestrates the logic, reads local analog sensors via MCP3008, controls a Fan Relay, sounds a Buzzer, manages a multi-functional RGB LED, and manages cloud communication.
+- **RGB Actuators**: An RGB LED represents physical actuators: **Red (Heater)**, **Green (Pump)**, and **Blue (Mist/Humidifier)**.
 - **Auto / Manual Control**: Switch seamlessly between hardware-driven automation (Auto) and cloud-driven manual overrides (Manual).
 - **Glassmorphism Web UI (AP Mode)**: On-the-fly Wi-Fi credentials provisioning. If the ESP32 loses connection or the Boot button is pressed, it broadcasts an Access Point with a sleek, responsive configuration portal.
 - **Node-RED Dashboard 2.0**: A premium, responsive Dark Theme UI featuring responsive grids, dynamic gauges, status badges, and manual control switches.
@@ -27,6 +28,7 @@ A robust, 3-Node distributed Smart Garden system built with **ESP32**, **ESP8266
 - **TFT ST7735 (SPI)**: `CS = GPIO5`, `RST = GPIO4`, `DC = GPIO2`
 - **MCP3008 (SPI ADC)**: `CS = GPIO13` -> Reads LDR (CH0) and Soil Moisture (CH2)
 - **Actuators**: Relay/Fan (`GPIO25`), Buzzer (`GPIO12`)
+- **RGB LED Actuators**: `R = GPIO26` (Heater), `G = GPIO27` (Pump), `B = GPIO14` (Mist)
 - **Inputs**: AP Mode Button (`GPIO0` - BOOT)
 
 ### 2. Node 1 - Sensors (ESP8266)
