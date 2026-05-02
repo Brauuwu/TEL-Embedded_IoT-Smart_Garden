@@ -5,7 +5,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#define LED_PIN D3
+#define LED_PIN D4
 
 #define NRF_CE D8
 #define NRF_CSN D0

@@ -40,7 +40,7 @@ A robust, 3-Node distributed Smart Garden system built with **ESP32**, **ESP8266
 ### 3. Node 2 - Actuators (ESP8266)
 *Edge node responsible for distal actions and local display.*
 - **OLED SSD1306**: `I2C (D1/D2)`
-- **LED**: `D3`
+- **LED**: `D4`
 - **NRF24L01**: `CE = D8`, `CSN = D0`
 
 ---
